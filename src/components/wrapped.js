@@ -26,7 +26,8 @@ class Callback extends React.Component {
         }
 
         this.getTopItems = this.getTopItems.bind(this)
-        this.handleTermChange = this.handleTermChange.bind(this)
+        this.handleTrackTermChange = this.handleTrackTermChange.bind(this)
+        this.handleArtistTermChange = this.handleArtistTermChange.bind(this)
         this.updateTracks = this.updateTracks.bind(this)
         this.getArtistInfo = this.getArtistInfo.bind(this)
         this.getGenres = this.getGenres.bind(this)
@@ -104,10 +105,24 @@ class Callback extends React.Component {
         .query({ offset: offset})
         .set("Authorization", "Bearer " + this.state.access_token)
     }
-    handleTermChange(event){
+    handleTrackTermChange(event){
         event.preventDefault()
 
         this.updateTracks(event.target.value)
+    }
+    handleArtistTermChange(event) {
+        event.preventDefault()
+
+        this.getTopItems("artists", event.target.value)
+        .then((res) => {
+            this.setState({top_artists: res.body.items})
+        })
+        .catch((err) => {
+            if(err.status === 401){
+                console.log(err.status)
+                this.setState({validToken: false})
+            }            
+        }) 
     }
     render() {
         const Genres = Array.from(this.state.genres.keys()).slice(0,5).map((genre, i) => {
@@ -142,15 +157,30 @@ class Callback extends React.Component {
         })
         return (
 
-            <div className="container">
+            <div className="container" style={{paddingTop:30}}>
                 <div className="row">
                     <div className="col-sm">
-                        <h1>Top Tracks</h1>
+                        <div className="d-flex flex-row justify-content-between">
+                            <h1>Top Tracks</h1>
+                            <select onChange={this.handleTrackTermChange}>
+                                <option value="short_term">Last month</option>
+                                <option value="medium_term">Last few weeks</option>
+                                <option value="long_term">All time</option>
+                            </select>
+                        </div>
+                        
                             
                         {TrackList}
                     </div>
                     <div className="col-sm">
-                        <h1>Top Artists</h1>
+                        <div className="d-flex flex-row justify-content-between">
+                            <h1>Top Artists</h1>
+                            <select onChange={this.handleArtistTermChange}>
+                                <option value="short_term">Last month</option>
+                                <option value="medium_term">Last few weeks</option>
+                                <option value="long_term">All time</option>
+                            </select>
+                        </div>
 
                         {Artists}
                     </div>
