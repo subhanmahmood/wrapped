@@ -27,7 +27,7 @@ class Home extends React.Component {
 
         this.state = {
             client_id: "9194029dfa0f40f49c9933f6c6e78e0d",
-            redirect_uri: "https://shrouded-fortress-38989.herokuapp.com/wrapped",
+            redirect_uri: "https://wrappedwhenever.herokuapp.com/wrapped",
             scope: "user-top-read",
             state: generateRandomString(16)
         }
