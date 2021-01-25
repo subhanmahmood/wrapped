@@ -1,0 +1,56 @@
+body {
+    background-color: #181818;
+    font-family: 'Montserrat' !important;
+}
+
+.header-container {
+    margin-top:200px;
+    margin-left: 30px;
+}
+
+.header {
+    font-family: 'Montserrat';
+    font-weight: 800;
+    font-size: 226px;
+    margin-bottom: 0;
+    margin-top:0;
+    line-height: 86.8%;
+    letter-spacing: -0.025em;
+}
+
+.header-small {
+    font-family: 'Montserrat';
+    font-style: italic;
+    font-weight: 800;
+    font-size: 48px;
+    margin-bottom: 0;
+}
+
+.login-btn {
+    border: none;
+    position: absolute;
+    bottom:35px;
+    right:35px;
+    background-color: #1DB954;
+    border-radius: 40px;
+    filter: drop-shadow(0px 6px 15px rgba(29, 185, 84, 0.37));
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size:24px;
+    padding: 20px;
+    color:#fff;
+    padding-left: 50px;
+    padding-right: 50px;
+    transition: all .3s ease-in-out;
+}
+
+.login-btn:hover {
+    margin-bottom: 1vh;
+    filter: drop-shadow(0px 6px 25px rgba(29, 185, 84, 0.5));
+    transition: all .3s ease-in-out;
+}
+
+.login-btn:focus {
+    border: none;
+    outline: 0;
+}
