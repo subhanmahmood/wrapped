@@ -34,6 +34,9 @@ class Home extends React.Component {
         
         this.handleAuthClick = this.handleAuthClick.bind(this)
     }
+    componentDidMount() {
+        console.log(process.env.NODE_ENV)
+    }
     handleAuthClick(event) {
         var url = 'https://accounts.spotify.com/authorize';
             url += '?response_type=token';
@@ -48,8 +51,8 @@ class Home extends React.Component {
     render(){
         return(
             <div>
-                <div class="header-container">
-                    <p class="header-small">YOUR</p>
+                <div className="header-container">
+                    <p className="header-small">YOUR</p>
                     <h1 className="header">Wrapped,<br/>Whenever</h1>
                 </div>
                 
