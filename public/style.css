@@ -28,9 +28,8 @@ body {
 
 .login-btn {
     border: none;
-    position: absolute;
-    bottom:35px;
-    right:35px;
+    width: auto;
+    margin-bottom: 50px;
     background-color: #1DB954;
     border-radius: 40px;
     filter: drop-shadow(0px 6px 15px rgba(29, 185, 84, 0.37));
@@ -45,7 +44,7 @@ body {
 }
 
 .login-btn:hover {
-    margin-bottom: 1vh;
+    margin-bottom: 55px;
     filter: drop-shadow(0px 6px 25px rgba(29, 185, 84, 0.5));
     transition: all .3s ease-in-out;
 }
