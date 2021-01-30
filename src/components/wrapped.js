@@ -93,20 +93,7 @@ class Callback extends React.Component {
     }
     componentDidMount() {
         // set top tracks
-        this.updateTracks(this.state.term)
-
-        // set top artists
-        this.getTopItems("artists", "short_term")
-        .then((res) => {
-            this.setState({top_artists: res.body.items})
-        })
-        .catch((err) => {
-            if(err.status === 401){
-                console.log(err.status)
-                this.setState({validToken: false})
-                this.redirectToHome()
-            }            
-        }) 
+        this.updateValues()
     }
     getGenres() {
         this.state.top_tracks.forEach((track, i) => {
@@ -176,6 +163,7 @@ class Callback extends React.Component {
                 <li key={i} style={{textTransform: 'capitalize'}}>{genre}</li>
             )
         })
+
         const TrackList = this.state.top_tracks.slice(0, 20).map((track, i) => {
             let artists = ""
             track.artists.forEach((artist, i) => {
