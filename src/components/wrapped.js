@@ -21,7 +21,17 @@ class Callback extends React.Component {
             access_token: params.access_token,
             top_artists: [],
             top_tracks: [],
-            term: 'short_term',
+            terms: [
+                "short_term",
+                "medium_term",
+                "long_term"
+            ],
+            termLabels: [
+                "Last month",
+                "Last 6 months",
+                "All time"
+            ],
+            termCount: 0,
             genres: new Map(),
             validToken: true
         }
@@ -32,6 +42,8 @@ class Callback extends React.Component {
         this.getArtistInfo = this.getArtistInfo.bind(this)
         this.getGenres = this.getGenres.bind(this)
         this.redirectToHome = this.redirectToHome.bind(this)
+        this.updateTermCount = this.updateTermCount.bind(this)
+        this.updateValues = this.updateValues.bind(this)
     }
     updateTracks(term) {
         this.getTopItems("tracks", term, 50)
@@ -59,6 +71,25 @@ class Callback extends React.Component {
                 this.redirectToHome()
             }  
         })
+    }
+    updateTermCount() {
+        this.setState({termCount: ++this.state.termCount}, this.updateValues);
+    }
+    updateValues() {
+        const term = this.state.terms[this.state.termCount % 3]
+        this.updateTracks(term)
+
+        this.getTopItems("artists", term)
+        .then((res) => {
+            this.setState({top_artists: res.body.items})
+        })
+        .catch((err) => {
+            if(err.status === 401){
+                console.log(err.status)
+                this.setState({validToken: false})
+                this.redirectToHome()
+            }            
+        }) 
     }
     componentDidMount() {
         // set top tracks
@@ -239,13 +270,9 @@ class Callback extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="fixed-bottom share-footer d-flex flex-row">
-                    <p style={{marginBottom: 0, fontWeight:600}}>#WRAPPEDWHENEVER</p>
-                    <select>
-                        <option default value="short_term">Last month</option>
-                        <option default value="medium_term">Last 6 months</option>
-                        <option default value="long_term">All time</option>
-                    </select>
+                <div className="fixed-bottom share-footer d-flex flex-row justify-content-around align-items-center">
+                    <p style={{marginBottom: 0, fontWeight:600, fontSize: 14}}>#WRAPPEDWHENEVER</p>
+                    <a onClick={this.updateTermCount} className="term-select" style={{fontSize:14}}>{this.state.termLabels[this.state.termCount % 3]}</a>
                 </div>
             </div>
         )

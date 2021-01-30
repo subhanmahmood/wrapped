@@ -156,3 +156,30 @@ body {
     background-color: #1DB954;
     color: #fff;
 }
+
+.term-select {
+    color: #fff;
+    text-decoration: none;
+    border: 2px solid white;
+    border-radius: 5px;
+    padding:5px;
+}
+
+.term-select:hover 
+{
+     color:#00A0C6; 
+     text-decoration:none; 
+     cursor:pointer;  
+}
+
+.term-select:link {
+    color: #fff;
+  }
+  
+  .term-select:hover {
+    color: #fff;
+  }
+  
+  .term-select:active {
+    color: #fff;;
+  }
