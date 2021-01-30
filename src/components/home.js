@@ -27,7 +27,7 @@ class Home extends React.Component {
 
         let redirect_uri = ""
         if(process.env.NODE_ENV === 'production') {
-            redirect_uri = 'https://wrappedwhenever.herokuapp.com/wrapped'
+            redirect_uri = 'https://wrappedwhenever.com/wrapped'
         } else {
             redirect_uri = 'http://localhost:3000/wrapped'
         }
