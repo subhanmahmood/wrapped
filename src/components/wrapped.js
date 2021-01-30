@@ -27,8 +27,7 @@ class Callback extends React.Component {
         }
 
         this.getTopItems = this.getTopItems.bind(this)
-        this.handleTrackTermChange = this.handleTrackTermChange.bind(this)
-        this.handleArtistTermChange = this.handleArtistTermChange.bind(this)
+        this.handleTermChange = this.handleTermChange.bind(this)
         this.updateTracks = this.updateTracks.bind(this)
         this.getArtistInfo = this.getArtistInfo.bind(this)
         this.getGenres = this.getGenres.bind(this)
@@ -111,17 +110,8 @@ class Callback extends React.Component {
         .query({ offset: offset})
         .set("Authorization", "Bearer " + this.state.access_token)
     }
-    handleTrackTermChange(data){
+    handleTermChange(data){
         this.updateTracks(data.value)
-    }
-    redirectToHome() {
-        if(process.env.NODE_ENV === "production") {
-            window.location = "https://wrappedwhenever.herokuapp.com/"
-        } else {
-            window.location = "http://localhost:3000"
-        }
-    }
-    handleArtistTermChange(data) {
 
         this.getTopItems("artists", data.value)
         .then((res) => {
@@ -134,6 +124,13 @@ class Callback extends React.Component {
                 this.redirectToHome()
             }            
         }) 
+    }
+    redirectToHome() {
+        if(process.env.NODE_ENV === "production") {
+            window.location = "https://wrappedwhenever.herokuapp.com/"
+        } else {
+            window.location = "http://localhost:3000"
+        }
     }
     render() {
           
@@ -180,25 +177,25 @@ class Callback extends React.Component {
                     <div className="row">
                         <div className="col-sm d-md-none d-lg-none d-xl-none d-xxl-none d-lg-block d-xl-block">
                             <div className="row">
-                                <Select defaultValue={{value: 'short_term', label: 'Last month'}} onChange={this.handleTrackTermChange} options={options} styles={{width: 50}}/>
+                                <Select defaultValue={{value: 'short_term', label: 'Last month'}} onChange={this.handleTermChange} options={options} styles={{width: 50}}/>
                             </div>
                             <div className="parent perspective">
                                 {this.state.top_tracks.slice(0, 5).map((track, i) => {
                                     
-                                    const offset = i * 50;
+                                    const offset = i * 45;
                                     const index = 5 - i;
                                     return(
-                                        <img id="track" style={{right:offset, zIndex:index}} src={track.album.images[1].url} height="200" width="200" className="square-img child"/>
+                                        <img id="track" style={{right:offset, zIndex:index}} src={track.album.images[1].url} height="180" width="180" className="square-img child"/>
                                     )
                                 })}
                             </div>
                             <div className="container-sm">
-                                <div className="row" style={{marginTop:240}}>
+                                <div className="row" style={{marginTop:210}}>
                                     <div className="col">
                                         <h6 style={{fontWeight:700}}>TOP ARTISTS</h6>
                                         {this.state.top_artists.slice(0,5).map((artist, i) => {
                                             return(
-                                                <div><p style={{marginBottom: 0, fontSize: 14}}><b>{i + 1}</b>&nbsp;{artist.name}</p></div>
+                                                <div><p className="d-block text-truncate" style={{marginBottom: -3, fontSize: 14, maxWidth: 140}}><b>{i + 1}</b>&nbsp;{artist.name}</p></div>
                                             )
                                         })}
                                     </div>
@@ -206,7 +203,7 @@ class Callback extends React.Component {
                                         <h6 style={{fontWeight:700}}>TOP SONGS</h6>
                                         {this.state.top_tracks.slice(0,5).map((track, i) => {
                                             return(
-                                                <div><p style={{marginBottom: 0, fontSize: 14}}><b>{i + 1}</b>&nbsp;{track.name}</p></div>
+                                                <div><p className="d-block text-truncate" style={{marginBottom: -3, fontSize: 14, maxWidth: 140}}><b>{i + 1}</b>&nbsp;{track.name}</p></div>
                                             )
                                         })}
                                     </div>
@@ -216,7 +213,7 @@ class Callback extends React.Component {
                                     <div className="d-flex flex-column">
                                         {Array.from(this.state.genres.keys()).slice(0,5).map((genre, i) => {
                                             return(
-                                                <div><p className="text-truncate" style={{marginBottom: 0, fontSize: 14}}><b>{i + 1}</b>&nbsp;{genre}</p></div>
+                                                <p className="d-sm-block text-truncate" style={{marginBottom: 0, fontSize: 14}}><b>{i + 1}</b>&nbsp;{genre}</p>
                                             )
                                         })}
                                     </div>
