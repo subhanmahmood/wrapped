@@ -137,12 +137,11 @@ body {
 }
 
 .parent.perspective {
-    margin-left:360px;
+    
     perspective: 200em;
 }
 
 .child {
-    margin: .5em;
     position: absolute;
     display: inline-block;
 }
