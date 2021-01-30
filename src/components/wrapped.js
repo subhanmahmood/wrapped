@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import superagent from 'superagent'
+import Select from 'react-select'
 
 function getHashParams() {
     var hashParams = {};
@@ -31,6 +32,7 @@ class Callback extends React.Component {
         this.updateTracks = this.updateTracks.bind(this)
         this.getArtistInfo = this.getArtistInfo.bind(this)
         this.getGenres = this.getGenres.bind(this)
+        this.redirectToHome = this.redirectToHome.bind(this)
     }
     updateTracks(term) {
         this.getTopItems("tracks", term, 50)
@@ -41,6 +43,7 @@ class Callback extends React.Component {
             if(err.status === 401){
                 console.log(err.status)
                 this.setState({validToken: false})
+                this.redirectToHome()
             }  
         })
 
@@ -54,6 +57,7 @@ class Callback extends React.Component {
             if(err.status === 401){
                 console.log(err.status)
                 this.setState({validToken: false})
+                this.redirectToHome()
             }  
         })
     }
@@ -62,7 +66,7 @@ class Callback extends React.Component {
         this.updateTracks(this.state.term)
 
         // set top artists
-        this.getTopItems("artists", "medium_term")
+        this.getTopItems("artists", "short_term")
         .then((res) => {
             this.setState({top_artists: res.body.items})
         })
@@ -70,6 +74,7 @@ class Callback extends React.Component {
             if(err.status === 401){
                 console.log(err.status)
                 this.setState({validToken: false})
+                this.redirectToHome()
             }            
         }) 
     }
@@ -86,6 +91,7 @@ class Callback extends React.Component {
             })
             .catch(err => {
                 console.log(err)
+                this.redirectToHome()
             })
         })
     }
@@ -105,15 +111,19 @@ class Callback extends React.Component {
         .query({ offset: offset})
         .set("Authorization", "Bearer " + this.state.access_token)
     }
-    handleTrackTermChange(event){
-        event.preventDefault()
-
-        this.updateTracks(event.target.value)
+    handleTrackTermChange(data){
+        this.updateTracks(data.value)
     }
-    handleArtistTermChange(event) {
-        event.preventDefault()
+    redirectToHome() {
+        if(process.env.NODE_ENV === "production") {
+            window.location = "https://wrappedwhenever.herokuapp.com/"
+        } else {
+            window.location = "http://localhost:3000"
+        }
+    }
+    handleArtistTermChange(data) {
 
-        this.getTopItems("artists", event.target.value)
+        this.getTopItems("artists", data.value)
         .then((res) => {
             this.setState({top_artists: res.body.items})
         })
@@ -121,10 +131,18 @@ class Callback extends React.Component {
             if(err.status === 401){
                 console.log(err.status)
                 this.setState({validToken: false})
+                this.redirectToHome()
             }            
         }) 
     }
     render() {
+          
+        const options = [
+            { value: 'short_term', label: 'Last month' },
+            { value: 'medium_term', label: 'Last 6 months' },
+            { value: 'long_term', label: 'All time' }
+        ]
+
         const Genres = Array.from(this.state.genres.keys()).slice(0,5).map((genre, i) => {
             return (
                 <li key={i} style={{textTransform: 'capitalize'}}>{genre}</li>
@@ -137,7 +155,7 @@ class Callback extends React.Component {
             });
             return (
                 <div className="d-flex flex-row" style={{paddingBottom: 10}}>
-                    <img src={track.album.images[2].url} height="64" width="64"/>
+                    <img src={track.album.images[2].url} height="64" width="64" className="square-img"/>
                     <div className="d-flex flex-column justify-content-center ps-3">
                         <b>{track.name}</b>
                         <small>{artists}</small>
@@ -148,48 +166,77 @@ class Callback extends React.Component {
         const Artists = this.state.top_artists.map((artist, i) => {
             return (
                 <div className="d-flex flex-row" style={{paddingBottom: 10}}>
-                    <img src={artist.images[2].url} height="64" width="64"/>
+                    <img src={artist.images[2].url} height="64" width="64" className="square-img"/>
                     <div className="d-flex flex-column justify-content-center ps-3">
                         <b>{artist.name}</b>
                     </div>
                 </div> 
             )
         })
+        
         return (
-
-            <div className="container" style={{paddingTop:30}}>
-                <div className="row">
-                    <div className="col-sm">
-                        <div className="d-flex flex-row justify-content-between">
-                            <h1>Top Tracks</h1>
-                            <select onChange={this.handleTrackTermChange}>
-                                <option value="short_term">Last month</option>
-                                <option value="medium_term">Last few weeks</option>
-                                <option value="long_term">All time</option>
-                            </select>
-                        </div>
-                        
+            <div>
+                <div className="container" style={{paddingTop:30}}>
+                    <div className="row">
+                        <div className="col-sm">
+                            <div className="d-flex flex-row justify-content-between">
+                                <h1 style={{fontWeight:800}}>Top Tracks</h1>
+                                <div style={{width:150}}>
+                                    <Select defaultValue={{value: 'short_term', label: 'Last month'}} onChange={this.handleTrackTermChange} options={options} styles={{width: 50}}/>
+                                </div>
+                            </div>
+                            <div className="parent perspective">
+                                {this.state.top_tracks.slice(0, 5).map((track, i) => {
+                                    
+                                    const offset = i * 40;
+                                    const index = 5 - i;
+                                    return(
+                                        <img id="track" style={{right:offset, zIndex:index}} src={track.album.images[1].url} height="240" width="240" className="square-img child"/>
+                                    )
+                                })}
+                            </div>
+                            <div className="row" style={{marginTop:300}}>
+                                <div className="col">
+                                    {this.state.top_tracks.slice(0,5).map((track, i) => {
+                                        return(
+                                            <div><p style={{marginBottom: 0, fontSize: 14}}><b>{i + 1}</b>&nbsp;{track.name}</p></div>
+                                        )
+                                    })}
+                                </div>
+                                <div className="col">
+                                    {this.state.top_artists.slice(0,5).map((artist, i) => {
+                                        return(
+                                            <div><p style={{marginBottom: 0, fontSize: 14}}><b>{i + 1}</b>&nbsp;{artist.name}</p></div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
                             
-                        {TrackList}
-                    </div>
-                    <div className="col-sm">
-                        <div className="d-flex flex-row justify-content-between">
-                            <h1>Top Artists</h1>
-                            <select onChange={this.handleArtistTermChange}>
-                                <option value="short_term">Last month</option>
-                                <option value="medium_term">Last few weeks</option>
-                                <option value="long_term">All time</option>
-                            </select>
+                            <div >
+                                {TrackList}
+                            </div>                     
+                            
                         </div>
+                        <div className="col-sm">
+                            <div className="d-flex flex-row justify-content-between">
+                                <h1>Top Artists</h1>
+                                <div style={{width:150}}>
+                                    <Select defaultValue={{value: 'short_term', label: 'Last month'}} onChange={this.handleArtistTermChange} options={options} styles={{width: 50}}/>
+                                </div>
+                            </div>
 
-                        {Artists}
+                            {Artists}
+                        </div>
+                        <div className="col-sm">
+                            <h1>Top Genres</h1>
+                            <ol style={{fontSize:24}}>
+                                {Genres}
+                            </ol>
+                        </div>
                     </div>
-                    <div className="col-sm">
-                        <h1>Top Genres</h1>
-                        <ol style={{fontSize:24}}>
-                            {Genres}
-                        </ol>
-                    </div>
+                </div>
+                <div className="fixed-bottom share-footer">
+                    <p style={{marginBottom: 0, fontWeight:600}}>#WRAPPEDWHENEVER</p>
                 </div>
             </div>
         )

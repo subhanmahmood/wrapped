@@ -25,14 +25,23 @@ class Home extends React.Component {
     constructor(props){
         super(props);
 
+        let redirect_uri = ""
+        if(process.env.NODE_ENV === 'production') {
+            redirect_uri = 'https://wrappedwhenever.herokuapp.com/wrapped'
+        } else {
+            redirect_uri = 'http://localhost:3000/wrapped'
+        }
         this.state = {
             client_id: "9194029dfa0f40f49c9933f6c6e78e0d",
-            redirect_uri: "http://localhost:3000/wrapped",
+            redirect_uri: redirect_uri,
             scope: "user-top-read",
             state: generateRandomString(16)
         }
         
         this.handleAuthClick = this.handleAuthClick.bind(this)
+    }
+    componentDidMount() {
+        console.log(process.env.NODE_ENV)
     }
     handleAuthClick(event) {
         var url = 'https://accounts.spotify.com/authorize';
@@ -48,12 +57,14 @@ class Home extends React.Component {
     render(){
         return(
             <div>
-                <div class="header-container">
-                    <p class="header-small">YOUR</p>
+                <div className="header-container">
+                    <p className="header-small">YOUR</p>
                     <h1 className="header">Wrapped,<br/>Whenever</h1>
                 </div>
+                <div className="d-flex flex-row justify-content-center fixed-bottom">
+                    <button onClick={this.handleAuthClick} className="login-btn">Login with Spotify</button>   
+                </div>
                 
-                <button onClick={this.handleAuthClick} class="login-btn">Login with Spotify</button>   
             </div>
         )
     }
