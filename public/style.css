@@ -1,6 +1,7 @@
 body {
-    background-color: #181818;
+    background-color: #181818 !important;
     font-family: 'Montserrat' !important;
+    color: #fff !important;
 }
 
 .header-container {
@@ -153,7 +154,6 @@ body {
 
 .share-footer {
     padding: 20px;
-    background-color: #1DB954;
     color: #fff;
 }
 
