@@ -212,7 +212,7 @@ class Callback extends React.Component {
                                         })}
                                     </div>
                                     <div className="container-sm">
-                                        <div className="row" style={{marginTop:220}}>
+                                        <div className="row" style={{marginTop:210}}>
                                             <div className="col">
                                                 <h6 style={{fontWeight:700}}>TOP ARTISTS</h6>
                                                 {this.state.top_artists.slice(0,5).map((artist, i) => {
