@@ -225,7 +225,7 @@ class Callback extends React.Component {
                                                 <h6 style={{fontWeight:700}}>TOP SONGS</h6>
                                                 {this.state.top_tracks.slice(0,5).map((track, i) => {
                                                     return(
-                                                        <div><p className="d-block text-truncate" style={{marginBottom: -3, fontSize: 14, maxWidth: 140}}><b>{i + 1}</b>&nbsp;&nbsp;{track.name}</p></div>
+                                                        <div><p className="d-block text-truncate" style={{marginBottom: -3, fontSize: 14, maxWidth: 130}}><b>{i + 1}</b>&nbsp;&nbsp;{track.name}</p></div>
                                                     )
                                                 })}
                                             </div>
