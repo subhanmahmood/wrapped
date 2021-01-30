@@ -179,11 +179,8 @@ class Callback extends React.Component {
                 <div className="container" style={{paddingTop:30}}>
                     <div className="row">
                         <div className="col-sm">
-                            <div className="d-flex flex-row justify-content-between">
-                                <h1 style={{fontWeight:800}}>Top Tracks</h1>
-                                <div style={{width:150}}>
-                                    <Select defaultValue={{value: 'short_term', label: 'Last month'}} onChange={this.handleTrackTermChange} options={options} styles={{width: 50}}/>
-                                </div>
+                            <div className="row">
+                                <Select defaultValue={{value: 'short_term', label: 'Last month'}} onChange={this.handleTrackTermChange} options={options} styles={{width: 50}}/>
                             </div>
                             <div className="parent perspective">
                                 {this.state.top_tracks.slice(0, 5).map((track, i) => {
@@ -195,29 +192,39 @@ class Callback extends React.Component {
                                     )
                                 })}
                             </div>
-                            <div className="row" style={{marginTop:300}}>
-                                <div className="col">
-                                    {this.state.top_tracks.slice(0,5).map((track, i) => {
-                                        return(
-                                            <div><p style={{marginBottom: 0, fontSize: 14}}><b>{i + 1}</b>&nbsp;{track.name}</p></div>
-                                        )
-                                    })}
+                            <div className="container-sm">
+                                <div className="row" style={{marginTop:300}}>
+                                    <div className="col">
+                                        <h6 style={{fontWeight:700}}>TOP ARTISTS</h6>
+                                        {this.state.top_artists.slice(0,5).map((artist, i) => {
+                                            return(
+                                                <div><p style={{marginBottom: 0, fontSize: 14}}><b>{i + 1}</b>&nbsp;{artist.name}</p></div>
+                                            )
+                                        })}
+                                    </div>
+                                    <div className="col">
+                                        <h6 style={{fontWeight:700}}>TOP SONGS</h6>
+                                        {this.state.top_tracks.slice(0,5).map((track, i) => {
+                                            return(
+                                                <div><p style={{marginBottom: 0, fontSize: 14}}><b>{i + 1}</b>&nbsp;{track.name}</p></div>
+                                            )
+                                        })}
+                                    </div>
                                 </div>
-                                <div className="col">
-                                    {this.state.top_artists.slice(0,5).map((artist, i) => {
-                                        return(
-                                            <div><p style={{marginBottom: 0, fontSize: 14}}><b>{i + 1}</b>&nbsp;{artist.name}</p></div>
-                                        )
-                                    })}
+                                <div className="row" style={{marginTop: 20}}>
+                                    <h6 style={{fontWeight:700, textAlign:'center'}}>TOP GENRES</h6>
+                                    <div className="d-flex flex-column">
+                                        {Array.from(this.state.genres.keys()).slice(0,5).map((genre, i) => {
+                                            return(
+                                                <div><p className="text-truncate" style={{marginBottom: 0, fontSize: 14}}><b>{i + 1}</b>&nbsp;{genre}</p></div>
+                                            )
+                                        })}
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <div >
-                                {TrackList}
-                            </div>                     
+                            </div>                    
                             
                         </div>
-                        <div className="col-sm">
+                        <div className="col-sm d-none d-sm-none d-sm-block d-md-block">
                             <div className="d-flex flex-row justify-content-between">
                                 <h1>Top Artists</h1>
                                 <div style={{width:150}}>
@@ -227,7 +234,7 @@ class Callback extends React.Component {
 
                             {Artists}
                         </div>
-                        <div className="col-sm">
+                        <div className="col-sm d-none d-sm-none d-sm-block d-md-block">
                             <h1>Top Genres</h1>
                             <ol style={{fontSize:24}}>
                                 {Genres}
