@@ -8,10 +8,83 @@ body {
     margin-left: 30px;
 }
 
+@media (min-width: 576px) { 
+    .header {
+        font-size: 6em;
+    }
+
+    .header-small {
+        font-size: 2em;
+    }
+
+    .header-container {
+        margin-top:200px;
+        margin-left: 10px;
+    }
+}
+
+@media (min-width: 768px) { 
+    .header {
+        font-size: 8em;
+    }
+
+    .header-small {
+        font-size: 3em;
+    }
+}
+
+@media (min-width: 992px) { 
+    .header {
+        font-size: 10em;
+    }
+
+    .header-small {
+        font-size: 3em;
+    }
+}
+
+@media (min-width: 1200px) { 
+    .header {
+        font-size: 12em;
+    }
+
+    .header-small {
+        font-size: 4em;
+    }
+}
+
+
+
+@media (max-width: 575.98px) { 
+    .header {
+        font-size: 4em;
+    }
+
+    .header-small {
+        font-size: 2em;
+    }
+
+    .header-container {
+        margin-top:200px;
+        margin-left: 10px;
+    }
+}
+
+@media (max-width: 767.98px) { 
+
+}
+
+@media (max-width: 991.98px) { 
+
+}
+
+@media (max-width: 1199.98px) { 
+    
+}
+
 .header {
     font-family: 'Montserrat';
     font-weight: 800;
-    font-size: 16em;
     margin-bottom: 0;
     margin-top:0;
     line-height: 86.8%;
@@ -22,7 +95,6 @@ body {
     font-family: 'Montserrat';
     font-style: italic;
     font-weight: 800;
-    font-size: 48px;
     margin-bottom: 0;
 }
 
@@ -52,4 +124,35 @@ body {
 .login-btn:focus {
     border: none;
     outline: 0;
+}
+
+.square-img {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.35);
+    border-radius: 5px;
+}
+
+.parent {
+    display: inline-block;
+}
+
+.parent.perspective {
+    margin-left:390px;
+    perspective: 200em;
+}
+
+.child {
+    margin: .5em;
+    position: absolute;
+    display: inline-block;
+}
+
+.parent.perspective .child {
+    transform: rotateY(50deg);
+    background: tomato;
+}
+
+.share-footer {
+    padding: 20px;
+    background-color: #1DB954;
+    color: #fff;
 }
