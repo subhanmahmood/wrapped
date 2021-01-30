@@ -178,22 +178,22 @@ class Callback extends React.Component {
             <div>
                 <div className="container" style={{paddingTop:30}}>
                     <div className="row">
-                        <div className="col-sm">
+                        <div className="col-sm d-md-none d-lg-none d-xl-none d-xxl-none d-lg-block d-xl-block">
                             <div className="row">
                                 <Select defaultValue={{value: 'short_term', label: 'Last month'}} onChange={this.handleTrackTermChange} options={options} styles={{width: 50}}/>
                             </div>
                             <div className="parent perspective">
                                 {this.state.top_tracks.slice(0, 5).map((track, i) => {
                                     
-                                    const offset = i * 40;
+                                    const offset = i * 50;
                                     const index = 5 - i;
                                     return(
-                                        <img id="track" style={{right:offset, zIndex:index}} src={track.album.images[1].url} height="240" width="240" className="square-img child"/>
+                                        <img id="track" style={{right:offset, zIndex:index}} src={track.album.images[1].url} height="200" width="200" className="square-img child"/>
                                     )
                                 })}
                             </div>
                             <div className="container-sm">
-                                <div className="row" style={{marginTop:300}}>
+                                <div className="row" style={{marginTop:240}}>
                                     <div className="col">
                                         <h6 style={{fontWeight:700}}>TOP ARTISTS</h6>
                                         {this.state.top_artists.slice(0,5).map((artist, i) => {
