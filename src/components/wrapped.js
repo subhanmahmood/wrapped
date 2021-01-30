@@ -201,18 +201,18 @@ class Callback extends React.Component {
                         <div className="row">
                             <div style={{padding:20}} className="col-sm d-md-none d-lg-none d-xl-none d-xxl-none d-lg-block d-xl-block">
                                 <div id="main" style={{backgroundColor: main_color, height: main_card_height}}>
-                                    <div className="parent perspective">
+                                    <div className="parent perspective" style={{marginLeft: 350}}>
                                         {this.state.top_tracks.slice(0, 5).map((track, i) => {
                                             
-                                            const offset = i * 35;
+                                            const offset = i * 40;
                                             const index = 5 - i;
                                             return(
-                                                <img alt={i} id="track" style={{right:offset, zIndex:index}} src={track.album.images[1].url} height="220" width="220" className="square-img child"/>
+                                                <img alt={i} id="track" style={{right:offset, zIndex:index}} src={track.album.images[1].url} height="190" width="190" className="square-img child"/>
                                             )
                                         })}
                                     </div>
                                     <div className="container-sm">
-                                        <div className="row" style={{marginTop:250}}>
+                                        <div className="row" style={{marginTop:220}}>
                                             <div className="col">
                                                 <h6 style={{fontWeight:700}}>TOP ARTISTS</h6>
                                                 {this.state.top_artists.slice(0,5).map((artist, i) => {
