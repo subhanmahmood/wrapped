@@ -173,29 +173,29 @@ class Callback extends React.Component {
         
         return (
             <div>
-                <div className="container" style={{paddingTop:30}}>
+                <div className="container">
                     <div className="row">
                         <div className="col-sm d-md-none d-lg-none d-xl-none d-xxl-none d-lg-block d-xl-block">
-                            <div className="row">
+                            <div className="row d-none d-sm-block d-md-block">
                                 <Select defaultValue={{value: 'short_term', label: 'Last month'}} onChange={this.handleTermChange} options={options} styles={{width: 50}}/>
                             </div>
                             <div className="parent perspective">
                                 {this.state.top_tracks.slice(0, 5).map((track, i) => {
                                     
-                                    const offset = i * 45;
+                                    const offset = i * 35;
                                     const index = 5 - i;
                                     return(
-                                        <img id="track" style={{right:offset, zIndex:index}} src={track.album.images[1].url} height="180" width="180" className="square-img child"/>
+                                        <img id="track" style={{right:offset, zIndex:index}} src={track.album.images[1].url} height="220" width="220" className="square-img child"/>
                                     )
                                 })}
                             </div>
                             <div className="container-sm">
-                                <div className="row" style={{marginTop:210}}>
+                                <div className="row" style={{marginTop:250}}>
                                     <div className="col">
                                         <h6 style={{fontWeight:700}}>TOP ARTISTS</h6>
                                         {this.state.top_artists.slice(0,5).map((artist, i) => {
                                             return(
-                                                <div><p className="d-block text-truncate" style={{marginBottom: -3, fontSize: 14, maxWidth: 140}}><b>{i + 1}</b>&nbsp;{artist.name}</p></div>
+                                                <div><p className="d-block text-truncate" style={{marginBottom: -3, fontSize: 14, maxWidth: 140}}><b>{i + 1}</b>&nbsp;&nbsp;{artist.name}</p></div>
                                             )
                                         })}
                                     </div>
@@ -203,7 +203,7 @@ class Callback extends React.Component {
                                         <h6 style={{fontWeight:700}}>TOP SONGS</h6>
                                         {this.state.top_tracks.slice(0,5).map((track, i) => {
                                             return(
-                                                <div><p className="d-block text-truncate" style={{marginBottom: -3, fontSize: 14, maxWidth: 140}}><b>{i + 1}</b>&nbsp;{track.name}</p></div>
+                                                <div><p className="d-block text-truncate" style={{marginBottom: -3, fontSize: 14, maxWidth: 140}}><b>{i + 1}</b>&nbsp;&nbsp;{track.name}</p></div>
                                             )
                                         })}
                                     </div>
@@ -239,8 +239,13 @@ class Callback extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="fixed-bottom share-footer">
+                <div className="fixed-bottom share-footer d-flex flex-row">
                     <p style={{marginBottom: 0, fontWeight:600}}>#WRAPPEDWHENEVER</p>
+                    <select>
+                        <option default value="short_term">Last month</option>
+                        <option default value="medium_term">Last 6 months</option>
+                        <option default value="long_term">All time</option>
+                    </select>
                 </div>
             </div>
         )

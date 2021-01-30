@@ -136,7 +136,7 @@ body {
 }
 
 .parent.perspective {
-    margin-left:370px;
+    margin-left:360px;
     perspective: 200em;
 }
 
