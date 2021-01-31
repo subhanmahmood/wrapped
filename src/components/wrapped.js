@@ -45,6 +45,29 @@ class Callback extends React.Component {
             access_token: params.access_token,
             top_artists: [],
             top_tracks: [],
+            data: [
+                {
+                    term: "short_term",
+                    label: "Last month",
+                    tracks: [],
+                    artists: [],
+                    genres: new Map()
+                },
+                {
+                    term: "medium_term",
+                    label: "Last 6 months",
+                    tracks: [],
+                    artists: [],
+                    genres: new Map()
+                },
+                {
+                    term: "long_term",
+                    label: "All time",
+                    tracks: [],
+                    artists: [],
+                    genres: new Map()
+                }
+            ],
             terms: [
                 "short_term",
                 "medium_term",
@@ -63,6 +86,7 @@ class Callback extends React.Component {
                 "linear-gradient(0.03deg, #CC95C0 1.38%, #DBD4B4 50.68%, #7AA1D2 99.97%)",
                 "linear-gradient(0.15deg, #E55D87 0.13%, #5FC3E4 99.88%)"
             ],
+            tempGenres: new Map(),
             footerHeight: 0,
             termCount: 0,
             genres: new Map(),
@@ -71,94 +95,105 @@ class Callback extends React.Component {
         }
 
         this.getTopItems = this.getTopItems.bind(this)
-        this.updateTracks = this.updateTracks.bind(this)
         this.getArtistInfo = this.getArtistInfo.bind(this)
-        this.getGenres = this.getGenres.bind(this)
         this.redirectToHome = this.redirectToHome.bind(this)
         this.updateTermCount = this.updateTermCount.bind(this)
-        this.updateValues = this.updateValues.bind(this)
+        this.updateGenres = this.updateGenres.bind(this)
     }
-    updateTracks(term) {
-        this.getTopItems("tracks", term, 50)
-        .then((res) => {
-            this.setState({top_tracks: res.body.items})
-        })
-        .catch((err) => {
-            if(err.status === 401){
-                console.log(err.status)
-                this.setState({validToken: false})
-                this.redirectToHome()
-            }  
-        })
 
-        this.getTopItems("tracks", term, 50, 49)
-        .then((res) => {
-            let updatedTracks = new Object(this.state.top_tracks)
-            updatedTracks.push(...res.body.items.slice(1))
-            this.setState({top_tracks: updatedTracks}, this.getGenres)
-        })
-        .catch((err) => {
-            if(err.status === 401){
-                console.log(err.status)
-                this.setState({validToken: false})
-                this.redirectToHome()
-            }  
-        })
-    }
-    updateTermCount() {
-        this.setState({loading:true, termCount: this.state.termCount + 1}, this.updateValues);
-    }
-    updateValues() {
-        
-        const term = this.state.terms[this.state.termCount % 3]
-        this.updateTracks(term)
-
-        this.getTopItems("artists", term)
-        .then((res) => {
-            this.setState({top_artists: res.body.items, loading: false})
-        })
-        .catch((err) => {
-            if(err.status === 401){
-                console.log(err.status)
-                this.setState({validToken: false})
-                this.redirectToHome()
-            }            
-        }) 
-    }
     componentDidMount() {
         // set top tracks
-        this.updateValues()
 
         const footerHeight = document.getElementById("footer").clientHeight
-        this.setState({footerHeight: footerHeight})     
-    }
-    componentWillMount() {
+        this.setState({footerHeight: footerHeight})  
+        
         const min = Math.ceil(0)
         const max = Math.ceil(this.state.colors.length - 1)
         const colorIdx = Math.floor(Math.random() * (max - min + 1)) + min
 
         document.body.style.backgroundImage = this.state.colors[colorIdx];
-    }
-    componentWillUnmount(){
-        document.body.style.backgroundImage = null;
-    }
-    getGenres() {
-        this.state.top_tracks.forEach((track, i) => {
-            this.getArtistInfo(track.artists[0].id)
-            .then(res => {
-                let updatedGenres = this.state.genres
-                res.body.genres.forEach(genre => {
-                    updatedGenres.set(genre, (updatedGenres.get(genre) || 0) + 1)         
-                })
-                const finalGenres = new Map([...updatedGenres.entries()].sort((a, b) => b[1] - a[1]));
-                this.setState({genres:finalGenres})
+        
+        this.state.data.forEach((item, i) => {
+            this.getTopItems("tracks", item.term, 50)
+            .then((res) => {
+                let updatedData = new Object(this.state.data)
+                updatedData[i].tracks = res.body.items
+                this.setState({data: updatedData})
             })
-            .catch(err => {
-                console.log(err)
-                this.redirectToHome()
+            .catch((err) => {
+                if(err.status === 401){
+                    console.log(err.status)
+                    this.setState({validToken: false})
+                    this.redirectToHome()
+                }  
+            })
+
+            this.getTopItems("tracks", item.term, 50, 49)
+            .then((res) => {
+                let updatedData = new Object(this.state.data)
+                updatedData[i].tracks.push(...res.body.items.slice(1))
+                this.setState({data: updatedData}, this.updateGenres)
+            })
+            .catch((err) => {
+                if(err.status === 401){
+                    console.log(err.status)
+                    this.setState({validToken: false})
+                    this.redirectToHome()
+                }  
+            })
+
+            this.getTopItems("artists", item.term)
+            .then((res) => {
+                let updatedData = new Object(this.state.data)
+                updatedData[i].artists = res.body.items
+                this.setState({data: updatedData})
+            })
+            .catch((err) => {
+                if(err.status === 401){
+                    console.log(err.status)
+                    this.setState({validToken: false})
+                    //this.redirectToHome()
+                }            
+            }) 
+
+        })
+    }
+
+    updateGenres(){
+        this.state.data.forEach((item, i) => {
+            
+            item.tracks.forEach((track, j) => {
+                
+                this.getArtistInfo(track.artists[0].id)
+                .then(res => {
+                    let updatedData = new Object(this.state.data)
+                    
+                    res.body.genres.forEach(genre => {
+                        updatedData[i].genres.set(genre, (updatedData[i].genres.get(genre) || 0) + 1)         
+                    })
+                    const finalGenres = new Map([...updatedData[i].genres.entries()].sort((a, b) => b[1] - a[1]));
+                    updatedData[i].genres = finalGenres
+                    this.setState({data:updatedData})
+                })
+                .catch(err => {
+                    console.log(err)
+                    if(err.status=== 401){
+                        this.redirectToHome()
+                    }
+                    
+                })
             })
         })
     }
+
+    componentWillUnmount(){
+        document.body.style.backgroundImage = null;
+    }
+
+    updateTermCount() {
+        this.setState({loading:true, termCount: this.state.termCount + 1}, this.updateValues);
+    }
+
     async getArtistInfo(artistId) {
         return superagent.get(`https://api.spotify.com/v1/artists/${artistId}`)
         .set("Authorization", "Bearer " + this.state.access_token)
@@ -218,14 +253,15 @@ class Callback extends React.Component {
     
         const main_card_height = window.innerHeight - this.state.footerHeight - 40;
         const main_color = '#181818'
+        const data = this.state.data[this.state.termCount % 3]
         return (
             <div>
                 <div className="container">
                     <div className="row">
                         <div style={{padding:20}} className="col-sm d-md-none d-lg-none d-xl-none d-xxl-none d-lg-block d-xl-block">
-                            <div id="main" style={{backgroundColor: main_color, height: main_card_height, borderRadius: 10}}>
+                            <div id="main" style={{backgroundImage: "linear-gradient(360deg, #181818 0%, #343434 100%)", height: main_card_height, borderRadius: 10}}>
                                 <div className="parent perspective" style={{marginLeft: 350}}>
-                                    {this.state.top_tracks.slice(0, 5).map((track, i) => {
+                                    {data.tracks.slice(0, 5).map((track, i) => {
                                         
                                         const offset = i * 40;
                                         const index = 5 - i;
@@ -238,7 +274,7 @@ class Callback extends React.Component {
                                     <div className="row" style={{marginTop:210}}>
                                         <div className="col">
                                             <h6 style={{fontWeight:700}}>TOP ARTISTS</h6>
-                                            {this.state.top_artists.slice(0,5).map((artist, i) => {
+                                            {data.artists.slice(0,5).map((artist, i) => {
                                                 return(
                                                     <div key={i}><p className="d-block text-truncate" style={{marginBottom: -4, fontSize: 12, maxWidth: 140}}><b>{i + 1}</b>&nbsp;&nbsp;{artist.name}</p></div>
                                                 )
@@ -246,7 +282,7 @@ class Callback extends React.Component {
                                         </div>
                                         <div className="col">
                                             <h6 style={{fontWeight:700}}>TOP SONGS</h6>
-                                            {this.state.top_tracks.slice(0,5).map((track, i) => {
+                                            {data.tracks.slice(0,5).map((track, i) => {
                                                 return(
                                                     <div key={i}><p className="d-block text-truncate" style={{marginBottom: -4, fontSize: 12, maxWidth: 140}}><b>{i + 1}</b>&nbsp;&nbsp;{track.name}</p></div>
                                                 )
@@ -256,7 +292,7 @@ class Callback extends React.Component {
                                     <div className="row" style={{marginTop: 20}}>
                                         <h6 style={{fontWeight:700, textAlign:'center'}}>TOP GENRES</h6>
                                         <div className="d-flex flex-column">
-                                            {Array.from(this.state.genres.keys()).slice(0,5).map((genre, i) => {
+                                            {Array.from(data.genres.keys()).slice(0,5).map((genre, i) => {
                                                 return(
                                                     <p key={i} className="d-sm-block text-truncate" style={{marginBottom: -4, fontSize: 12}}><b>{i + 1}</b>&nbsp;{genre}</p>
                                                 )
@@ -284,7 +320,7 @@ class Callback extends React.Component {
                 
                 <div id="footer" style={{backgroundColor: main_color}} className="fixed-bottom share-footer d-flex flex-row justify-content-between align-items-center">
                     <p style={{marginBottom: 0, fontWeight:600, fontSize: 14}}>#WRAPPEDWHENEVER</p>
-                    <a href="#" onClick={this.updateTermCount} className="term-select" style={{fontSize:14}}>{this.state.termLabels[this.state.termCount % 3]}</a>
+                    <a href="#" onClick={this.updateTermCount} className="term-select" style={{fontSize:14}}>{this.state.data[this.state.termCount % 3].label}</a>
                 </div>
             </div>
         )
