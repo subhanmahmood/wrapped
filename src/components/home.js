@@ -41,7 +41,8 @@ class Home extends React.Component {
         this.handleAuthClick = this.handleAuthClick.bind(this)
     }
     componentDidMount() {
-        console.log(process.env.NODE_ENV)
+        const body = document.querySelector("body")
+        body.style.background = "#181818"
     }
     handleAuthClick(event) {
         var url = 'https://accounts.spotify.com/authorize';
