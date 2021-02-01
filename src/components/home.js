@@ -32,7 +32,7 @@ class Home extends React.Component {
             redirect_uri = 'http://localhost:3000/wrapped'
         }
         this.state = {
-            client_id: "9194029dfa0f40f49c9933f6c6e78e0d",
+            client_id: "3489a6bba8dd4575a5895e3e4dc75e5c",
             redirect_uri: redirect_uri,
             scope: "user-top-read",
             state: generateRandomString(16)
