@@ -34,7 +34,7 @@ class Home extends React.Component {
         this.state = {
             client_id: "3489a6bba8dd4575a5895e3e4dc75e5c",
             redirect_uri: redirect_uri,
-            scope: "user-top-read",
+            scope: "user-top-read playlist-modify-public playlist-modify-private playlist-read-private playlist-read-collaborative",
             state: generateRandomString(16)
         }
         

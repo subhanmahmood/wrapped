@@ -70,7 +70,8 @@ class Callback extends React.Component {
             termCount: 0,
             genres: new Map(),
             validToken: true,
-            loading: true
+            loading: true,
+            albumOffset: 0
         }
 
         this.getTopItems = this.getTopItems.bind(this)
@@ -102,6 +103,8 @@ class Callback extends React.Component {
             document.body.style.backgroundColor = '#181818'
         }
         
+        const mainPanelWidth = parseInt(document.getElementById("main-panel").style.width.slice(0, -2))
+        this.setState({albumOffset: Math.floor((mainPanelWidth - 126) / 5)})
 
         superagent.get(`https://api.spotify.com/v1/me`)
         .set("Authorization", "Bearer " + this.state.access_token)
@@ -348,11 +351,11 @@ class Callback extends React.Component {
                                     swipeOptions={{continuous:false}}
                                     ref={el => (reactSwipeEl = el)}
                                 >
-                                    <div id="main" style={styles.main_card}>
+                                    <div id="main-panel" style={styles.main_card}>
                                         <div className="parent perspective" style={{marginLeft: 350}}>
                                             {data.tracks.slice(0, 5).map((track, i) => {
                                                 
-                                                const offset = i * 40;
+                                                const offset = i * this.state.albumOffset;
                                                 const index = 5 - i;
                                                 return(
                                                     <img key={i} alt={i} id="track" style={{right:offset, zIndex:index}} src={track.album.images[1].url} height="190" width="190" className="square-img child"/>
