@@ -58,7 +58,6 @@ class Callback extends React.Component {
                 "All time"
             ],
             colors: [
-                "linear-gradient(0.13deg, #72C6EF 0.11%, #004E8F 99.89%)",
                 "linear-gradient(0deg, #EC008C 0%, #FC6767 100%)",
                 "linear-gradient(10.8deg, #FF6E7F 2.8%, #BFE9FF 98.38%)",
                 "linear-gradient(4.8deg, #DA22FF 5.89%, #9733EE 95.62%)",
@@ -97,7 +96,12 @@ class Callback extends React.Component {
         const max = Math.ceil(this.state.colors.length - 1)
         const colorIdx = Math.floor(Math.random() * (max - min + 1)) + min
 
-        document.body.style.backgroundImage = this.state.colors[colorIdx];
+        if(window.mobileCheck()) {
+            document.body.style.backgroundImage = this.state.colors[colorIdx];
+        } else {
+            document.body.style.backgroundColor = '#181818'
+        }
+        
 
         superagent.get(`https://api.spotify.com/v1/me`)
         .set("Authorization", "Bearer " + this.state.access_token)
@@ -335,89 +339,104 @@ class Callback extends React.Component {
         let reactSwipeEl;
         return (
             <div>
-                <div className="container">
-                    <div className="row">
-                        <div style={styles.mobile_container} className="col-sm d-md-none d-lg-none d-xl-none d-xxl-none d-lg-block d-xl-block">
-                            <ReactSwipe 
-                                className="carousel"
-                                swipeOptions={{continuous:false}}
-                                ref={el => (reactSwipeEl = el)}
-                            >
-                                <div id="main" style={styles.main_card}>
-                                    <div className="parent perspective" style={{marginLeft: 350}}>
-                                        {data.tracks.slice(0, 5).map((track, i) => {
-                                            
-                                            const offset = i * 40;
-                                            const index = 5 - i;
-                                            return(
-                                                <img key={i} alt={i} id="track" style={{right:offset, zIndex:index}} src={track.album.images[1].url} height="190" width="190" className="square-img child"/>
-                                            )
-                                        })}
-                                    </div>
-                                    <div className="container-sm">
-                                        <div className="row" style={{marginTop:210}}>
-                                            <div className="col">
-                                                <h6 style={styles.topHeading}>TOP ARTISTS</h6>
-                                                {data.artists.slice(0,5).map((artist, i) => {
-                                                    return(
-                                                        <div key={i}><p className="d-block text-truncate" style={styles.textItem}><b>{i + 1}</b>&nbsp;&nbsp;{artist.name}</p></div>
-                                                    )
-                                                })}
+                <div className="d-md-none d-lg-none d-xl-none d-xxl-none d-lg-block d-xl-block">
+                    <div className="container">
+                        <div className="row d-md-none d-lg-none d-xl-none d-xxl-none d-lg-block d-xl-block">
+                            <div style={styles.mobile_container} className="col-sm">
+                                <ReactSwipe 
+                                    className="carousel"
+                                    swipeOptions={{continuous:false}}
+                                    ref={el => (reactSwipeEl = el)}
+                                >
+                                    <div id="main" style={styles.main_card}>
+                                        <div className="parent perspective" style={{marginLeft: 350}}>
+                                            {data.tracks.slice(0, 5).map((track, i) => {
+                                                
+                                                const offset = i * 40;
+                                                const index = 5 - i;
+                                                return(
+                                                    <img key={i} alt={i} id="track" style={{right:offset, zIndex:index}} src={track.album.images[1].url} height="190" width="190" className="square-img child"/>
+                                                )
+                                            })}
+                                        </div>
+                                        <div className="container-sm">
+                                            <div className="row" style={{marginTop:210}}>
+                                                <div className="col">
+                                                    <h6 style={styles.topHeading}>TOP ARTISTS</h6>
+                                                    {data.artists.slice(0,5).map((artist, i) => {
+                                                        return(
+                                                            <div key={i}><p className="d-block text-truncate" style={styles.textItem}><b>{i + 1}</b>&nbsp;&nbsp;{artist.name}</p></div>
+                                                        )
+                                                    })}
+                                                </div>
+                                                <div className="col">
+                                                    <h6 style={styles.topHeading}>TOP SONGS</h6>
+                                                    {data.tracks.slice(0,5).map((track, i) => {
+                                                        return(
+                                                            <div key={i}><p className="d-block text-truncate" style={styles.textItem}><b>{i + 1}</b>&nbsp;&nbsp;{track.name}</p></div>
+                                                        )
+                                                    })}
+                                                </div>
                                             </div>
-                                            <div className="col">
-                                                <h6 style={styles.topHeading}>TOP SONGS</h6>
-                                                {data.tracks.slice(0,5).map((track, i) => {
-                                                    return(
-                                                        <div key={i}><p className="d-block text-truncate" style={styles.textItem}><b>{i + 1}</b>&nbsp;&nbsp;{track.name}</p></div>
-                                                    )
-                                                })}
+                                            <div className="row" style={{marginTop: 20}}>
+                                                <h6 style={{...styles.topHeading, textAlign:'center'}}>TOP GENRES</h6>
+                                                <div className="d-flex flex-column">
+                                                    {Array.from(data.genres.keys()).slice(0,5).map((genre, i) => {
+                                                        return(
+                                                            <p key={i} className="d-sm-block text-truncate" style={{...styles.textItem, ...styles.genreText}}><b>{i + 1}</b>&nbsp;&nbsp;{genre}</p>
+                                                        )
+                                                    })}
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="row" style={{marginTop: 20}}>
-                                            <h6 style={{...styles.topHeading, textAlign:'center'}}>TOP GENRES</h6>
-                                            <div className="d-flex flex-column">
-                                                {Array.from(data.genres.keys()).slice(0,5).map((genre, i) => {
-                                                    return(
-                                                        <p key={i} className="d-sm-block text-truncate" style={{...styles.textItem, ...styles.genreText}}><b>{i + 1}</b>&nbsp;{genre}</p>
-                                                    )
-                                                })}
-                                            </div>
-                                        </div>
+                                        <div style={{bottom: 0, position: 'absolute', width: '100%', textAlign: 'center'}} className="row justify-content-center">
+                                            <p style={{marginLeft:20}}><small style={{color: '#a6a6a6', fontSize:10}}>Swipe right to add to playlist &#8594;</small></p>
+                                        </div>                    
                                     </div>
-                                    <div style={{bottom: 0, position: 'absolute', width: '100%', textAlign: 'center'}} className="row justify-content-center">
-                                        <p style={{marginLeft:20}}><small style={{color: '#a6a6a6'}}>Swipe right to add to playlist</small></p>
-                                    </div>                    
-                                </div>
 
-                                <div id="main" style={styles.button_panel}>
-                                    <div style={{height: '100%'}} className="d-flex align-items-end justify-content-center">
-                                        <button id="playlistBtn" onClick={this.addToPlaylist} className="login-btn">Add to playlist</button>
-                                    </div>               
-                                </div>
-                            </ReactSwipe>
-                            
-                        </div>
-                        <div className="col-sm d-none d-sm-none d-sm-block d-md-block">
-                            <div className="d-flex flex-row justify-content-between">
-                                <h1>Top Artists</h1>
+                                    <div id="main" style={styles.button_panel}>
+                                        <div style={{height: '100%'}} className="d-flex align-items-end justify-content-center">
+                                            <button id="playlistBtn" onClick={this.addToPlaylist} className="login-btn">Add to playlist</button>
+                                        </div>               
+                                    </div>
+                                </ReactSwipe>
+                                
                             </div>
+                            <div className="col-sm d-none d-sm-none d-sm-block d-md-block">
+                                <div className="d-flex flex-row justify-content-between">
+                                    <h1>Top Artists</h1>
+                                </div>
 
-                            {Artists}
+                                {Artists}
+                            </div>
+                            <div className="col-sm d-none d-sm-none d-sm-block d-md-block">
+                                <h1>Top Genres</h1>
+                                <ol style={{fontSize:24}}>
+                                    {Genres}
+                                </ol>
+                            </div>
                         </div>
-                        <div className="col-sm d-none d-sm-none d-sm-block d-md-block">
-                            <h1>Top Genres</h1>
-                            <ol style={{fontSize:24}}>
-                                {Genres}
-                            </ol>
+                    </div>
+                    
+                    <div id="footer" style={{backgroundColor: main_color}} className="fixed-bottom share-footer d-flex flex-row justify-content-between align-items-center">
+                        <div className="d-flex flex-column">
+                            <p style={styles.footerTag}>#WRAPPEDWHENEVER</p>
+                        </div>
+                        <a href="#" onClick={this.updateTermCount} className="term-select" style={{fontSize:14}}>{this.state.data[this.state.termCount % 3].label}</a>
+                    </div>
+                    <Toaster/>
+                </div>
+                <div className="container">
+                    <div className="row d-none d-sm-block d-sm-none d-md-block">
+                        <div className="col-sm"  style={{height: '80vh', marginTop: 20}}>
+                            <div className="card" style={{backgroundColor: '#3a3a3a', width: 'auto'}}>
+                                <div className="card-body">
+                                    <p style={{marginBottom:0}}>Open WrappedWhenever.com on your phone for the full experience!</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <div id="footer" style={{backgroundColor: main_color}} className="fixed-bottom share-footer d-flex flex-row justify-content-between align-items-center">
-                    <p style={styles.footerTag}>#WRAPPEDWHENEVER</p>
-                    <a href="#" onClick={this.updateTermCount} className="term-select" style={{fontSize:14}}>{this.state.data[this.state.termCount % 3].label}</a>
-                </div>
-                <Toaster/>
             </div>
         )
     }
