@@ -71,7 +71,8 @@ class Callback extends React.Component {
             genres: new Map(),
             validToken: true,
             loading: true,
-            albumOffset: 0
+            albumOffset: 0,
+            albumContainerOffset: 0
         }
 
         this.getTopItems = this.getTopItems.bind(this)
@@ -104,7 +105,8 @@ class Callback extends React.Component {
         }
         
         const mainPanelWidth = parseInt(document.getElementById("main-panel").style.width.slice(0, -2))
-        this.setState({albumOffset: Math.floor((mainPanelWidth - 126) / 5)})
+        this.setState({albumOffset: Math.floor((mainPanelWidth - 126 - 24) / 5), albumContainerOffset: mainPanelWidth})
+        console.log(parseInt(document.getElementById("main-panel").style.width))
 
         superagent.get(`https://api.spotify.com/v1/me`)
         .set("Authorization", "Bearer " + this.state.access_token)
@@ -352,7 +354,7 @@ class Callback extends React.Component {
                                     ref={el => (reactSwipeEl = el)}
                                 >
                                     <div id="main-panel" style={styles.main_card}>
-                                        <div className="parent perspective" style={{marginLeft: 350}}>
+                                        <div className="parent perspective" style={{marginLeft: this.state.albumContainerOffset}}>
                                             {data.tracks.slice(0, 5).map((track, i) => {
                                                 
                                                 const offset = i * this.state.albumOffset;
