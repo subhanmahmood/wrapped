@@ -385,7 +385,7 @@ class Callback extends React.Component {
                                         </div>
                                     </div>
                                     <div style={{bottom: 0, position: 'absolute', width: '100%', textAlign: 'center'}} className="row justify-content-center">
-                                        <p><small style={{color: '#a6a6a6'}}>Swipe right to add to playlist</small></p>
+                                        <p style={{marginLeft:20}}><small style={{color: '#a6a6a6'}}>Swipe right to add to playlist</small></p>
                                     </div>                    
                                 </div>
 
