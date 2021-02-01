@@ -304,7 +304,12 @@ class Callback extends React.Component {
             main_card: {
                 height: window.innerHeight - this.state.footerHeight - 40,
                 backgroundImage: "linear-gradient(360deg, #181818 0%, #343434 100%)",
-                borderRadius: 10
+                borderRadius: 10,
+                position: 'relative'
+            },
+            button_panel: {
+                height: window.innerHeight - this.state.footerHeight - 40,
+                position: 'relative'
             },
             topHeading: {
                 fontWeight: 700
@@ -378,10 +383,13 @@ class Callback extends React.Component {
                                                 })}
                                             </div>
                                         </div>
+                                    </div>
+                                    <div style={{bottom: 0, position: 'absolute', width: '100%', textAlign: 'center'}} className="row justify-content-center">
+                                        <p><small style={{color: '#a6a6a6'}}>Swipe right to add to playlist</small></p>
                                     </div>                    
                                 </div>
 
-                                <div id="main" style={styles.main_card}>
+                                <div id="main" style={styles.button_panel}>
                                     <div style={{height: '100%'}} className="d-flex align-items-end justify-content-center">
                                         <button id="playlistBtn" onClick={this.addToPlaylist} className="login-btn">Add to playlist</button>
                                     </div>               
