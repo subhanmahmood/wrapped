@@ -257,7 +257,7 @@ class Callback extends React.Component {
     }
     redirectToHome() {
         if(process.env.NODE_ENV === "production") {
-            window.location = "https://wrappedwhenever.herokuapp.com/"
+            window.location = "https://wrappedwhenever.com/"
         } else {
             window.location = "http://localhost:3000"
         }
