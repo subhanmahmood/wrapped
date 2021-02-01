@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactSwipe from 'react-swipe'
 import superagent from 'superagent'
+import toast, { Toaster } from 'react-hot-toast';
+
 
 function getHashParams() {
     var hashParams = {};
@@ -226,6 +228,7 @@ class Callback extends React.Component {
                             console.log(err)
                         } else {
                             console.log(res.body)
+                            toast.success('Added your playlist!')
                         }
                     })
                 } else {
@@ -311,6 +314,9 @@ class Callback extends React.Component {
                 fontSize: 12, 
                 maxWidth: 140
             },
+            genreText: {
+                textTransform: 'capitalize'
+            },
             footerTag: {
                 marginBottom: 0, 
                 fontWeight:700, 
@@ -367,7 +373,7 @@ class Callback extends React.Component {
                                             <div className="d-flex flex-column">
                                                 {Array.from(data.genres.keys()).slice(0,5).map((genre, i) => {
                                                     return(
-                                                        <p key={i} className="d-sm-block text-truncate" style={styles.textItem}><b>{i + 1}</b>&nbsp;{genre}</p>
+                                                        <p key={i} className="d-sm-block text-truncate" style={{...styles.textItem, ...styles.genreText}}><b>{i + 1}</b>&nbsp;{genre}</p>
                                                     )
                                                 })}
                                             </div>
@@ -377,7 +383,7 @@ class Callback extends React.Component {
 
                                 <div id="main" style={styles.main_card}>
                                     <div style={{height: '100%'}} className="d-flex align-items-end justify-content-center">
-                                        <button onClick={this.addToPlaylist} className="login-btn">Add to playlist</button>
+                                        <button id="playlistBtn" onClick={this.addToPlaylist} className="login-btn">Add to playlist</button>
                                     </div>               
                                 </div>
                             </ReactSwipe>
@@ -403,6 +409,7 @@ class Callback extends React.Component {
                     <p style={styles.footerTag}>#WRAPPEDWHENEVER</p>
                     <a href="#" onClick={this.updateTermCount} className="term-select" style={{fontSize:14}}>{this.state.data[this.state.termCount % 3].label}</a>
                 </div>
+                <Toaster/>
             </div>
         )
     }

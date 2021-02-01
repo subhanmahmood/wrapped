@@ -113,7 +113,7 @@ body {
     color:#fff;
     padding-left: 50px;
     padding-right: 50px;
-    transition: all .3s ease-in-out;
+    transition: opacity 500ms 500ms, filter .3s ease-in-out;
 }
 
 .login-btn:hover {
@@ -125,6 +125,11 @@ body {
 .login-btn:focus {
     border: none;
     outline: 0;
+}
+
+.login-btn.hide {
+    transition: opacity .1s ease-out;
+    opacity: 0.0;
 }
 
 .square-img {
