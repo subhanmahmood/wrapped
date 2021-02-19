@@ -106,7 +106,7 @@ class Callback extends React.Component {
         
         const mainPanelWidth = parseInt(document.getElementById("main-panel").style.width.slice(0, -2))
         this.setState({albumOffset: Math.floor((mainPanelWidth - 126 - 24) / 5), albumContainerOffset: mainPanelWidth})
-        console.log(parseInt(document.getElementById("main-panel").style.width))
+        
 
         superagent.get(`https://api.spotify.com/v1/me`)
         .set("Authorization", "Bearer " + this.state.access_token)
@@ -114,8 +114,13 @@ class Callback extends React.Component {
             console.log(res)
             if(err){
                 console.log(err)
+                if(err.status === 429) {
+                    console.log(res.headers['Retry-After'])
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, res.headers['Retry-After'] * 1000)
+                }
             } else {
-                console.log(res.body)
                 this.setState({userData: res.body})
             }
         })
@@ -222,13 +227,10 @@ class Callback extends React.Component {
             } else {
                 
                 if(res.created === true){
-                    console.log(res)
 
                     const trackURIs = this.state.data[this.state.termCount % 3].tracks.map((track, i) => {
                         return track.uri
                     })
-
-                    console.log(trackURIs)
 
                     superagent.post(`https://api.spotify.com/v1/playlists/${res.body.id}/tracks`)
                     .set("Authorization", "Bearer " + this.state.access_token)
