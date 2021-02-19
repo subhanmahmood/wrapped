@@ -111,6 +111,7 @@ class Callback extends React.Component {
         superagent.get(`https://api.spotify.com/v1/me`)
         .set("Authorization", "Bearer " + this.state.access_token)
         .end((err, res) => {
+            console.log(res)
             if(err){
                 console.log(err)
             } else {
@@ -219,6 +220,7 @@ class Callback extends React.Component {
             if(err) {
                 console.log(err)
             } else {
+                
                 if(res.created === true){
                     console.log(res)
 
@@ -326,7 +328,7 @@ class Callback extends React.Component {
             textItem: {
                 marginBottom: -4, 
                 fontSize: 12, 
-                maxWidth: 140
+                maxWidth: 130
             },
             genreText: {
                 textTransform: 'capitalize'
