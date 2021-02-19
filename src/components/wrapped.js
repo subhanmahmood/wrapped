@@ -126,6 +126,7 @@ class Callback extends React.Component {
         this.state.data.forEach((item, i) => {
             this.getTopItems("tracks", item.term, 50)
                 .then((res) => {
+                    
                     if (res.status === 429) {
                         console.log(res.headers['Retry-After'])
                         setTimeout(() => {
@@ -296,20 +297,20 @@ class Callback extends React.Component {
         }
     }
     render() {
-
-        const Genres = Array.from(this.state.genres.keys()).slice(0, 5).map((genre, i) => {
+        const data = this.state.data[this.state.termCount % 3]
+        const Genres = Array.from(data.genres.keys()).slice(0, 5).map((genre, i) => {
             return (
-                <li key={i} style={{ textTransform: 'capitalize' }}>{genre}</li>
+                <p key={i} className="d-sm-block text-truncate" ><b>{i + 1}</b>&nbsp;&nbsp;{genre}</p>
             )
         })
 
-        const TrackList = this.state.top_tracks.slice(0, 20).map((track, i) => {
+        const TrackList = data.tracks.slice(0, 20).map((track, i) => {
             let artists = ""
             track.artists.forEach((artist, i) => {
                 artists += (i === track.artists.length - 1) ? `${artist.name}` : `${artist.name}, `
             });
             return (
-                <div key={i} className="d-flex flex-row" style={{ paddingBottom: 10 }}>
+                <div key={i} className="d-flex flex-row" style={{ paddingBottom: 20 }}>
                     <img alt={i} src={track.album.images[2].url} height="64" width="64" className="square-img" />
                     <div className="d-flex flex-column justify-content-center ps-3">
                         <b>{track.name}</b>
@@ -318,9 +319,9 @@ class Callback extends React.Component {
                 </div>
             )
         })
-        const Artists = this.state.top_artists.map((artist, i) => {
+        const Artists = data.artists.slice(0, 20).map((artist, i) => {
             return (
-                <div key={i} className="d-flex flex-row" style={{ paddingBottom: 10 }}>
+                <div key={i} className="d-flex flex-row" style={{ paddingBottom: 20 }}>
                     <img alt={i} src={artist.images[2].url} height="64" width="64" className="square-img" />
                     <div className="d-flex flex-column justify-content-center ps-3">
                         <b>{artist.name}</b>
@@ -363,7 +364,7 @@ class Callback extends React.Component {
         }
 
         const main_color = '#181818'
-        const data = this.state.data[this.state.termCount % 3]
+        
 
         let reactSwipeEl;
         return (
@@ -431,22 +432,11 @@ class Callback extends React.Component {
                                 </ReactSwipe>
 
                             </div>
-                            <div className="col-sm d-none d-sm-none d-sm-block d-md-block">
-                                <div className="d-flex flex-row justify-content-between">
-                                    <h1>Top Artists</h1>
-                                </div>
-
-                                {Artists}
-                            </div>
-                            <div className="col-sm d-none d-sm-none d-sm-block d-md-block">
-                                <h1>Top Genres</h1>
-                                <ol style={{ fontSize: 24 }}>
-                                    {Genres}
-                                </ol>
-                            </div>
+                            
                         </div>
                     </div>
-
+                    
+                    
                     <div id="footer" style={{ backgroundColor: main_color }} className="fixed-bottom share-footer d-flex flex-row justify-content-between align-items-center">
                         <div className="d-flex flex-column">
                             <p style={styles.footerTag}>#WRAPPEDWHENEVER</p>
@@ -455,17 +445,38 @@ class Callback extends React.Component {
                     </div>
                     <Toaster />
                 </div>
-                <div className="container">
-                    <div className="row d-none d-sm-block d-sm-none d-md-block">
-                        <div className="col-sm" style={{ height: '80vh', marginTop: 20 }}>
-                            <div className="card" style={{ backgroundColor: '#3a3a3a', width: 'auto' }}>
-                                <div className="card-body">
-                                    <p style={{ marginBottom: 0 }}>Open WrappedWhenever.com on your phone for the full experience!</p>
+                <div className="d-sm-none d-md-block 	d-md-none d-lg-block">
+                    <div className="container" style={{marginTop:20, paddingBottom: 60}}>
+                        <div className="row">
+                            <div className="col-sm">
+                                <div className="d-flex flex-row justify-content-between">
+                                    <h1 style={{color:'#fff', fontWeight: 700, paddingBottom: 15}}>Top Tracks</h1>
                                 </div>
+
+                                {TrackList}
+                            </div>
+                            <div className="col-sm">
+                                <div className="d-flex flex-row justify-content-between">
+                                    <h1 style={{color:'#fff', fontWeight: 700, paddingBottom: 15}}>Top Artists</h1>
+                                </div>
+
+                                {Artists}
+                            </div>
+                            
+                            <div className="col-sm ">
+                                <h1 style={{color:'#fff', fontWeight: 700, paddingBottom: 15}}>Top Genres</h1>
+                                {Genres}
                             </div>
                         </div>
                     </div>
+                    <div id="footer" style={{ backgroundColor: main_color }} className="fixed-bottom share-footer d-flex flex-row justify-content-between align-items-center">
+                        <div className="d-flex flex-column">
+                            <p style={styles.footerTag}>#WRAPPEDWHENEVER</p>
+                        </div>
+                        <a href="#" onClick={this.updateTermCount} className="term-select" style={{ fontSize: 14 }}>{this.state.data[this.state.termCount % 3].label}</a>
+                    </div>
                 </div>
+                
             </div>
         )
     }
