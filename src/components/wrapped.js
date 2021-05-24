@@ -344,7 +344,8 @@ class Callback extends React.Component {
                 height: window.innerHeight - this.state.footerHeight - 40,
                 backgroundImage: "linear-gradient(360deg, #181818 0%, #343434 100%)",
                 borderRadius: 10,
-                position: 'relative'
+                position: 'relative',
+                overflowY: 'hidden'
             },
             button_panel: {
                 height: window.innerHeight - this.state.footerHeight - 40,
